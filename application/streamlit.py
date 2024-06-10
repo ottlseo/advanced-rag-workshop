@@ -70,14 +70,14 @@ def show_answer_with_multi_columns(answers):
 st.set_page_config(layout="wide")
 st.title("AWS Q&A Bot with Advanced RAG!")  # page 제목
 
-st.markdown('''- This chatbot is implemented using Amazon Bedrock Claude v3 Sonnet.''')
-st.markdown('''- Integrated advanced RAG technology: **Hybrid Search, ReRanker, and Parent Document, HyDE, Rag Fusion** techniques.''')
-st.markdown('''- The original data is stored in Amazon OpenSearch, and the embedding model utilizes Amazon Titan.''')
-st.markdown('''
-            - You can find the source code in 
-            [this Github](https://github.com/aws-samples/aws-ai-ml-workshop-kr/tree/master/genai/aws-gen-ai-kr/20_applications/02_qa_chatbot/04_web_ui)
-            ''')
+st.markdown('''- 이 챗봇은 Amazon Bedrock과 Claude v3 Sonnet 모델로 구현되었습니다.''')
+st.markdown('''- 다음과 같은 Advanced RAG 기술을 사용합니다: **Hybrid Search, ReRanker, and Parent Document, HyDE, Rag Fusion**''')
+st.markdown('''- 원본 데이터는 Amazon OpenSearch에 저장되어 있으며, Amazon Titan 임베딩 모델이 사용되었습니다.''')
+st.markdown('''    ''')
+
 # Store the initial value of widgets in session state
+if "document_type" not in st.session_state:
+    st.session_state.document_type = "Default"
 if "showing_option" not in st.session_state:
     st.session_state.showing_option = "Separately"
 if "search_mode" not in st.session_state:
@@ -89,16 +89,22 @@ disabled = st.session_state.showing_option=="All at once"
 with st.sidebar: # Sidebar 모델 옵션
     with st.container(border=True):
         st.radio(
-            "Choose UI between 2 options:",
+            "Document type:",
+            ["Default", "Custom"],
+            captions = ["챗봇이 참고하는 자료로 기본 문서(상록초등학교 자료)가 사용됩니다.", "원하시는 문서를 직접 업로드해보세요."],
+            key="document_type",
+        )
+    with st.container(border=True):
+        st.radio(
+            "UI option:",
             ["Separately", "All at once"],
             captions = ["아래에서 설정한 파라미터 조합으로 하나의 검색 결과가 도출됩니다.", "여러 옵션들을 한 화면에서 한꺼번에 볼 수 있습니다."],
             key="showing_option",
         )
     st.markdown('''### Set parameters for your Bot 👇''')
-
     with st.container(border=True):
         search_mode = st.radio(
-            "Choose a search mode:",
+            "Search mode:",
             ["Lexical search", "Semantic search", "Hybrid search"],
             captions = [
                 "키워드의 일치 여부를 기반으로 답변을 생성합니다.",
@@ -116,7 +122,7 @@ with st.sidebar: # Sidebar 모델 옵션
             alpha = 0.0
         elif search_mode == "Semantic search":
             alpha = 1.0
-    
+
     col1, col2 = st.columns(2)
     with col1:
         reranker = st.toggle("Reranker", 
@@ -143,11 +149,20 @@ with st.sidebar: # Sidebar 모델 옵션
         hyde = hyde_or_ragfusion == "HyDE"
         ragfusion = hyde_or_ragfusion == "RAG-Fusion"
 
-###### 1) 'Separately' 옵션 선택한 경우 ######
-if st.session_state.showing_option == "Separately":
+if st.session_state.document_type == "Custom": 
+    with st.container(border=True):
+        st.markdown('''#### 챗봇 서비스에 활용하고자 하는 문서를 업로드해보세요 👇''')
+        uploaded_file = st.file_uploader("문서의 내용을 임베딩하는 데에는 약 5분 정도 소요됩니다.")
+
+###### 'Separately' 옵션 선택한 경우 ######
+elif st.session_state.showing_option == "Separately":
+    with st.container(border=True):
+        st.markdown('''현재 기본 문서인 [상록초등학교 교육 과정 문서](https://file.notion.so/f/f/d82c0c1c-c239-4242-bd5e-320565fdc9d4/6057662b-2d01-4284-a65f-cc17d050a321/school_edu_guide.pdf?id=a2f7166b-f663-4740-aa06-ec559567011a&table=block&spaceId=d82c0c1c-c239-4242-bd5e-320565fdc9d4&expirationTimestamp=1718100000000&signature=wxS5AgYuK085mNvynkUZsRyqyMuqE_ucoCNfM4jRnU0&downloadName=school_edu_guide.pdf)를 활용하고 있습니다.''')
+        st.markdown('''다른 문서로 챗봇 서비스를 이용해보고 싶다면 왼쪽 사이드바의 Document type에서 'Custom' 옵션을 클릭해 문서를 업로드해보세요.''')
+    
     if "messages" not in st.session_state:
         st.session_state["messages"] = [
-            {"role": "assistant", "content": "How can I help you?"}
+            {"role": "assistant", "content": "안녕하세요, 무엇이 궁금하세요?"}
         ]
     # 지난 답변 출력
     for msg in st.session_state.messages:
@@ -201,12 +216,10 @@ if st.session_state.showing_option == "Separately":
         # UI 출력
         st.chat_message("assistant").write(answer)
         
-        
         if hyde:
             with st.chat_message("assistant"):
                 with st.expander("HyDE 중간 생성 답변 ⬇️"):
                     mid_answer
-            
         if ragfusion:
             with st.chat_message("assistant"):
                 with st.expander("RAG-Fusion 중간 생성 쿼리 ⬇️"):
@@ -227,9 +240,13 @@ if st.session_state.showing_option == "Separately":
 
 ###### 2) 'All at once' 옵션 선택한 경우 ######
 else:
+    with st.container(border=True):
+        st.markdown('''현재 기본 문서인 [상록초등학교 교육 과정 문서](https://file.notion.so/f/f/d82c0c1c-c239-4242-bd5e-320565fdc9d4/6057662b-2d01-4284-a65f-cc17d050a321/school_edu_guide.pdf?id=a2f7166b-f663-4740-aa06-ec559567011a&table=block&spaceId=d82c0c1c-c239-4242-bd5e-320565fdc9d4&expirationTimestamp=1718100000000&signature=wxS5AgYuK085mNvynkUZsRyqyMuqE_ucoCNfM4jRnU0&downloadName=school_edu_guide.pdf)를 활용하고 있습니다.''')
+        st.markdown('''다른 문서로 챗봇 서비스를 이용해보고 싶다면 왼쪽 사이드바의 Document type에서 'Custom' 옵션을 클릭해 문서를 업로드해보세요.''')
+    
     if "messages" not in st.session_state:
         st.session_state["messages"] = [
-            {"role": "assistant", "content": "How can I help you?"}
+            {"role": "assistant", "content": "안녕하세요, 무엇이 궁금하세요?"}
         ]
     # 지난 답변 출력
     for msg in st.session_state.messages:
