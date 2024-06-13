@@ -2,6 +2,7 @@ import base64
 import streamlit as st  # 모든 streamlit 명령은 "st" alias로 사용할 수 있습니다.
 import bedrock as glib  # 로컬 라이브러리 스크립트에 대한 참조
 from langchain.callbacks import StreamlitCallbackHandler
+from embedding_handler import upload_file_to_custom_docs_bucket
 
 ##################### Functions ########################
 def parse_image(metadata, tag):
@@ -25,6 +26,17 @@ def parse_metadata(metadata):
         else: 
             pass
     st.markdown(' - - - ')
+
+# document_type == "Custom" 일 경우 커스텀 파일을 업로드할 수 있도록 하는 모듈
+def custom_file_uploader():
+    with st.container(border=True):
+        st.markdown('''#### 챗봇 서비스에 활용하고자 하는 문서를 업로드해보세요 👇''')
+        uploaded_file = st.file_uploader("문서의 내용을 임베딩하는 데에는 약 5분 정도 소요됩니다.")
+        if uploaded_file:
+            with st.spinner("문서를 S3에 업로드하는 중입니다."):
+                upload_result = upload_file_to_custom_docs_bucket(uploaded_file)
+                # TODO: embedding_result 받아오는 코드 추가
+            st.markdown('(임시 출력) 파일 업로드 완료: {}'.format(upload_result)) # TODO: delete it
 
 # 'Separately' 옵션 선택 시 나오는 중간 Context를 탭 형태로 보여주는 UI
 def show_context_with_tab(contexts):
@@ -150,9 +162,7 @@ with st.sidebar: # Sidebar 모델 옵션
         ragfusion = hyde_or_ragfusion == "RAG-Fusion"
 
 if st.session_state.document_type == "Custom": 
-    with st.container(border=True):
-        st.markdown('''#### 챗봇 서비스에 활용하고자 하는 문서를 업로드해보세요 👇''')
-        uploaded_file = st.file_uploader("문서의 내용을 임베딩하는 데에는 약 5분 정도 소요됩니다.")
+    custom_file_uploader()
 
 ###### 'Separately' 옵션 선택한 경우 ######
 elif st.session_state.showing_option == "Separately":
