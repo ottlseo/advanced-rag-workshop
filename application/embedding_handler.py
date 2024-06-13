@@ -1,4 +1,4 @@
-import boto3
+import os, boto3
 import uuid
 
 s3 = boto3.client('s3')
@@ -11,12 +11,12 @@ def generate_random_string(length):
     return random_str[:length]
 
 def upload_file_to_s3(bucket_name, file):
-    file_key = generate_random_string(8)
+    key_name = generate_random_string(8) + "-" + os.path.basename(file.name)
     try:
-        s3.upload_fileobj(file, bucket_name, file_key) # 파일을 S3에 업로드
-        return file_key
+        s3.upload_fileobj(file, bucket_name, key_name) # 파일을 S3에 업로드
+        return key_name
     except Exception as e:
         return e
 
 def upload_file_to_custom_docs_bucket(file):
-    upload_file_to_s3(CUSTOM_FILE_BUCKET_NAME, file)
+    return upload_file_to_s3(CUSTOM_FILE_BUCKET_NAME, file)
