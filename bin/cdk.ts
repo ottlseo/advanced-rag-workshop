@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 import { App } from "aws-cdk-lib";
-import { ApplicationStack } from "../lib/applicationStack";
+import { EC2Stack } from "../lib/ec2Stack";
 import { OpensearchStack } from "../lib/openSearchStack";
 import { SagemakerStack, HuggingFaceLlmProps } from "../lib/sagemakerStack";
 
@@ -29,7 +29,7 @@ const HFprops: HuggingFaceLlmProps = {
 const sagemakerStack = new SagemakerStack(app, "SagemakerStack", HFprops);
 sagemakerStack.addDependency(opensearchStack);
 
-const applicationStack = new ApplicationStack(app, "ApplicationStack", envSetting);
-applicationStack.addDependency(sagemakerStack);
+const ec2Stack = new EC2Stack(app, "EC2Stack", envSetting);
+ec2Stack.addDependency(sagemakerStack);
 
 app.synth();

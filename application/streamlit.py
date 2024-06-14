@@ -2,7 +2,6 @@ import base64
 import streamlit as st  # 모든 streamlit 명령은 "st" alias로 사용할 수 있습니다.
 import bedrock as glib  # 로컬 라이브러리 스크립트에 대한 참조
 from langchain.callbacks import StreamlitCallbackHandler
-from embedding_handler import upload_file_to_custom_docs_bucket
 
 ##################### Functions ########################
 def parse_image(metadata, tag):
@@ -26,17 +25,6 @@ def parse_metadata(metadata):
         else: 
             pass
     st.markdown(' - - - ')
-
-# document_type == "Custom" 일 경우 커스텀 파일을 업로드할 수 있도록 하는 모듈
-def custom_file_uploader():
-    with st.container(border=True):
-        st.markdown('''#### 챗봇 서비스에 활용하고자 하는 문서를 업로드해보세요 👇''')
-        uploaded_file = st.file_uploader("문서의 내용을 임베딩하는 데에는 약 5분 정도 소요됩니다.")
-        if uploaded_file:
-            with st.spinner("문서를 S3에 업로드하는 중입니다."):
-                upload_result = upload_file_to_custom_docs_bucket(uploaded_file)
-                # TODO: embedding_result 받아오는 코드 추가
-            st.markdown('(임시 출력) 파일 업로드 완료: {}'.format(upload_result)) # TODO: delete it
 
 # 'Separately' 옵션 선택 시 나오는 중간 Context를 탭 형태로 보여주는 UI
 def show_context_with_tab(contexts):
@@ -161,11 +149,11 @@ with st.sidebar: # Sidebar 모델 옵션
         hyde = hyde_or_ragfusion == "HyDE"
         ragfusion = hyde_or_ragfusion == "RAG-Fusion"
 
-if st.session_state.document_type == "Custom": 
-    custom_file_uploader()
+# if st.session_state.document_type == "Custom": 
+    # TODO: OpenSearch endpoint name 변경
 
 ###### 'Separately' 옵션 선택한 경우 ######
-elif st.session_state.showing_option == "Separately":
+if st.session_state.showing_option == "Separately":
     with st.container(border=True):
         st.markdown('''현재 기본 문서인 [상록초등학교 교육 과정 문서](https://file.notion.so/f/f/d82c0c1c-c239-4242-bd5e-320565fdc9d4/6057662b-2d01-4284-a65f-cc17d050a321/school_edu_guide.pdf?id=a2f7166b-f663-4740-aa06-ec559567011a&table=block&spaceId=d82c0c1c-c239-4242-bd5e-320565fdc9d4&expirationTimestamp=1718100000000&signature=wxS5AgYuK085mNvynkUZsRyqyMuqE_ucoCNfM4jRnU0&downloadName=school_edu_guide.pdf)를 활용하고 있습니다.''')
         st.markdown('''다른 문서로 챗봇 서비스를 이용해보고 싶다면 왼쪽 사이드바의 Document type에서 'Custom' 옵션을 클릭해 문서를 업로드해보세요.''')
