@@ -3,7 +3,7 @@ import uuid
 
 s3 = boto3.client('s3')
 
-CUSTOM_FILE_BUCKET_NAME = "adv-rag-custom-docs-bucket"
+custom_file_bucket_name = os.environ.get('CUSTOM_BUCKET_NAME', 'adv-rag-custom-docs-bucket')
 
 def generate_random_string(length):
     random_str = str(uuid.uuid4())
@@ -19,4 +19,4 @@ def upload_file_to_s3(bucket_name, file):
         return e
 
 def upload_file_to_custom_docs_bucket(file):
-    return upload_file_to_s3(CUSTOM_FILE_BUCKET_NAME, file)
+    return upload_file_to_s3(custom_file_bucket_name, file)

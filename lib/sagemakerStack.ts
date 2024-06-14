@@ -1,5 +1,5 @@
 import * as sagemaker from "@aws-cdk/aws-sagemaker-alpha";
-import * as cdk from "aws-cdk-lib";
+import { Stack, CfnOutput } from 'aws-cdk-lib';
 import { CfnEndpointConfig } from "aws-cdk-lib/aws-sagemaker";
 import { Construct } from "constructs";
 
@@ -13,7 +13,7 @@ export interface HuggingFaceLlmProps {
   readonly startUpHealthCheckTimeoutInSeconds?: number;
 }
 
-export class SagemakerStack extends Construct {
+export class SagemakerStack extends Stack {
   readonly endpoint: sagemaker.Endpoint;
   constructor(scope: Construct, id: string, props: HuggingFaceLlmProps) {
     super(scope, id);
@@ -95,7 +95,7 @@ export class SagemakerStack extends Construct {
     this.endpoint.node.addDependency(cfnEndpointConfig);
     this.endpoint.node.addDependency(bridgeEndpointConfig);
 
-    new cdk.CfnOutput(this, "EndpointName", {
+    new CfnOutput(this, "EndpointName", {
       value: this.endpoint.endpointName,
     });
   }
