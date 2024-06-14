@@ -26,6 +26,16 @@ def parse_metadata(metadata):
             pass
     st.markdown(' - - - ')
 
+def show_document_info_label():
+    with st.container(border=True):
+        if st.session_state.document_type == "Default":
+            st.markdown('''📝 현재 기본 문서인 [**상록초등학교 교육 과정 문서**](https://file.notion.so/f/f/d82c0c1c-c239-4242-bd5e-320565fdc9d4/6057662b-2d01-4284-a65f-cc17d050a321/school_edu_guide.pdf?id=a2f7166b-f663-4740-aa06-ec559567011a&table=block&spaceId=d82c0c1c-c239-4242-bd5e-320565fdc9d4&expirationTimestamp=1718100000000&signature=wxS5AgYuK085mNvynkUZsRyqyMuqE_ucoCNfM4jRnU0&downloadName=school_edu_guide.pdf)를 활용하고 있습니다.''')
+            st.markdown('''다른 문서로 챗봇 서비스를 이용해보고 싶다면 왼쪽 사이드바의 Document type에서 *'Custom'* 옵션을 클릭하고, 진행자의 안내에 따라 문서를 새로 인덱싱하여 사용해보세요.''')
+        else:
+            st.markdown('''**💁‍♀️ 새로운 문서로 챗봇 서비스를 이용하고 싶으신가요?**''') 
+            st.markdown('''- **진행자의 안내에 따라 SageMaker Notebook에서 인덱싱 스크립트를 실행한 뒤** 이용 가능합니다.''')
+            st.markdown('''- 기존 문서 (상록초등학교 교육 과정)로 돌아가고 싶다면 사이드바의 Document type에서 *'Default'* 옵션을 선택하면 바로 변경할 수 있습니다.''')
+    
 # 'Separately' 옵션 선택 시 나오는 중간 Context를 탭 형태로 보여주는 UI
 def show_context_with_tab(contexts):
     tab_category = ["Semantic", "Keyword", "Without Reranker", "Similar Docs"]
@@ -154,10 +164,8 @@ with st.sidebar: # Sidebar 모델 옵션
 
 ###### 'Separately' 옵션 선택한 경우 ######
 if st.session_state.showing_option == "Separately":
-    with st.container(border=True):
-        st.markdown('''현재 기본 문서인 [상록초등학교 교육 과정 문서](https://file.notion.so/f/f/d82c0c1c-c239-4242-bd5e-320565fdc9d4/6057662b-2d01-4284-a65f-cc17d050a321/school_edu_guide.pdf?id=a2f7166b-f663-4740-aa06-ec559567011a&table=block&spaceId=d82c0c1c-c239-4242-bd5e-320565fdc9d4&expirationTimestamp=1718100000000&signature=wxS5AgYuK085mNvynkUZsRyqyMuqE_ucoCNfM4jRnU0&downloadName=school_edu_guide.pdf)를 활용하고 있습니다.''')
-        st.markdown('''다른 문서로 챗봇 서비스를 이용해보고 싶다면 왼쪽 사이드바의 Document type에서 'Custom' 옵션을 클릭해 문서를 업로드해보세요.''')
-    
+    show_document_info_label()
+
     if "messages" not in st.session_state:
         st.session_state["messages"] = [
             {"role": "assistant", "content": "안녕하세요, 무엇이 궁금하세요?"}
