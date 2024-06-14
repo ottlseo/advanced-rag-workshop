@@ -1,6 +1,14 @@
 # advanced-rag-workshop
 AWS Q&amp;A Bot with Advanced RAG Workshop Assets
 
+### How to deploy CDK stacks
+```bash
+isengardcli assume
+cdk bootstrap
+cdk deploy --all
+y
+```
+
 ## Welcome to your CDK TypeScript project
 
 This is a blank project for CDK development with TypeScript.
