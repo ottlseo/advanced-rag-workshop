@@ -14,13 +14,13 @@ export class OpensearchStack extends Stack {
     super(scope, id, props);
 
     const domainName = `rag-hol-mydomain`;
+
     const opensearch_user_id = "raguser";
 
-    const pm_opensearch_user_id = new ssm.StringParameter(
-      this,
-      "opensearch_user_id",
-      { parameterName: "opensearch_user_id", stringValue: "raguser" }
-    );
+    const user_id_pm = new ssm.StringParameter(this, "opensearch_user_id", {
+      parameterName: "opensearch_user_id",
+      stringValue: "raguser",
+    });
 
     const opensearch_user_password = "MarsEarth1!";
 
@@ -31,6 +31,7 @@ export class OpensearchStack extends Stack {
         }),
         generateStringKey: opensearch_user_password,
       },
+      secretName: "opensearch_user_password",
     });
 
     const domain = new opensearch.Domain(this, "Domain", {
@@ -68,8 +69,13 @@ export class OpensearchStack extends Stack {
     });
 
     new cdk.CfnOutput(this, "parameter store user id", {
-      value: pm_opensearch_user_id.parameterArn,
+      value: user_id_pm.parameterArn,
       description: "parameter store user id",
+    });
+
+    new cdk.CfnOutput(this, "secrets manager user pw", {
+      value: secret.secretName,
+      description: "secrets manager user pw",
     });
   }
 }
