@@ -1,5 +1,5 @@
-import * as sagemaker from "@aws-cdk/aws-sagemaker-alpha";
-import { Stack, CfnOutput } from 'aws-cdk-lib';
+import * as sagemaker from "aws-cdk-lib/aws-sagemaker";
+import { Stack, CfnOutput } from "aws-cdk-lib";
 import { CfnEndpointConfig } from "aws-cdk-lib/aws-sagemaker";
 import { Construct } from "constructs";
 
