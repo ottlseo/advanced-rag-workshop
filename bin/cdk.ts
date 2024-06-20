@@ -4,6 +4,7 @@ import { App } from "aws-cdk-lib";
 import { EC2Stack } from "../lib/ec2Stack";
 import { OpensearchStack } from "../lib/openSearchStack";
 import { SagemakerStack, HuggingFaceLlmProps } from "../lib/sagemakerStack";
+import { SageMakerNotebookInstanceStack } from "../lib/sagemakerNotebookStack";
 
 const DEFAULT_REGION = "us-west-2";
 const envSetting = {
@@ -31,5 +32,7 @@ sagemakerStack.addDependency(opensearchStack);
 
 const ec2Stack = new EC2Stack(app, "EC2Stack", envSetting);
 ec2Stack.addDependency(sagemakerStack);
+
+new SageMakerNotebookInstanceStack(app, "SagemakerNotebookInstance", envSetting);
 
 app.synth();
