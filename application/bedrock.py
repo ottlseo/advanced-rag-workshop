@@ -11,6 +11,7 @@ from utils.bedrock import bedrock_info
 
 region = boto3.Session().region_name
 pm = parameter_store(region)
+secrets_manager = boto3.client('secretsmanager', region_name=region)
 
 # 텍스트 생성 LLM 가져오기, streaming_callback을 인자로 받아옴
 def get_llm(streaming_callback):
@@ -40,7 +41,10 @@ def get_embedding_model():
 def get_opensearch_client():
     opensearch_domain_endpoint = pm.get_params(key='opensearch_domain_endpoint', enc=False)
     opensearch_user_id = pm.get_params(key='opensearch_user_id', enc=False)
-    opensearch_user_password = pm.get_params(key='opensearch_user_password', enc=True) # TODO: secrets_manager 부르도록 수정
+    
+    get_secret_value_response = secrets_manager.get_secret_value(SecretId="opensearch_user_password")
+    opensearch_user_password = get_secret_value_response['SecretString'] # decrypt # TODO: should check
+    
     opensearch_domain_endpoint = opensearch_domain_endpoint
     rag_user_name = opensearch_user_id
     rag_user_password = opensearch_user_password
