@@ -3,7 +3,6 @@ import "source-map-support/register";
 import { App } from "aws-cdk-lib";
 import { EC2Stack } from "../lib/ec2Stack";
 import { OpensearchStack } from "../lib/openSearchStack";
-import { SagemakerStack, HuggingFaceLlmProps } from "../lib/sagemakerStack";
 
 const DEFAULT_REGION = "us-west-2";
 const envSetting = {
@@ -17,19 +16,7 @@ const app = new App();
 
 const opensearchStack = new OpensearchStack(app, "OpensearchStack", envSetting);
 
-const HFprops: HuggingFaceLlmProps = {
-  name: "reranker",
-  instanceType: "ml.g5.xlarge",
-  environmentVariables: {
-    HF_MODEL_ID: "Dongjin-kr/ko-reranker",
-    HF_TASK: "text-classification",
-  },
-};
-
-const sagemakerStack = new SagemakerStack(app, "SagemakerStack", HFprops);
-sagemakerStack.addDependency(opensearchStack);
-
 const ec2Stack = new EC2Stack(app, "EC2Stack", envSetting);
-ec2Stack.addDependency(sagemakerStack);
+ec2Stack.addDependency(opensearchStack);
 
 app.synth();
