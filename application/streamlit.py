@@ -211,7 +211,8 @@ if st.session_state.showing_option == "Separately":
             reranker=reranker,
             hyde = hyde,
             ragfusion = ragfusion,
-            alpha = alpha
+            alpha = alpha,
+            document_type=st.session_state.document_type
         )
         # response 로 메세지, 링크, 레퍼런스(source_documents) 받아오게 설정된 것을 변수로 저장
         answer = response[0]
@@ -302,7 +303,8 @@ else:
                 reranker=False,
                 hyde = False,
                 ragfusion = False,
-                alpha = 0 # Lexical search
+                alpha = 0, # Lexical search
+                document_type=st.session_state.document_type
                 )[0]
             st.write(answer1)
             st_cb._complete_current_thought() # Thinking을 complete로 수동으로 바꾸어 줌
@@ -318,7 +320,8 @@ else:
                 reranker=False,
                 hyde = False,
                 ragfusion = False,
-                alpha = 1.0 # Semantic search
+                alpha = 1.0, # Semantic search
+                document_type=st.session_state.document_type
                 )[0]
             st.write(answer2)
             st_cb._complete_current_thought() 
@@ -334,7 +337,8 @@ else:
                 reranker=True, # Add Reranker option
                 hyde = False,
                 ragfusion = False,
-                alpha = alpha # Hybrid search
+                alpha = alpha, # Hybrid search
+                document_type=st.session_state.document_type
                 )[0]
             st.write(answer3)
             st_cb._complete_current_thought() 
@@ -350,7 +354,8 @@ else:
                 reranker=True, # Add Reranker option
                 hyde = False,
                 ragfusion = False,
-                alpha = alpha # Hybrid search
+                alpha = alpha, # Hybrid search
+                document_type=st.session_state.document_type
                 )[0]
             st.write(answer4)
             st_cb._complete_current_thought()

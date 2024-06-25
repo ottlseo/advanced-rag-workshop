@@ -11,6 +11,7 @@ from utils.bedrock import bedrock_info
 
 region = boto3.Session().region_name
 pm = parameter_store(region)
+secrets_manager = boto3.client('secretsmanager', region_name=region)
 
 # 텍스트 생성 LLM 가져오기, streaming_callback을 인자로 받아옴
 def get_llm(streaming_callback):
@@ -40,7 +41,10 @@ def get_embedding_model():
 def get_opensearch_client():
     opensearch_domain_endpoint = pm.get_params(key='opensearch_domain_endpoint', enc=False)
     opensearch_user_id = pm.get_params(key='opensearch_user_id', enc=False)
-    opensearch_user_password = pm.get_params(key='opensearch_user_password', enc=True)
+    
+    get_secret_value_response = secrets_manager.get_secret_value(SecretId="opensearch_user_password")
+    opensearch_user_password = get_secret_value_response['SecretString'] # decrypt # TODO: should check
+    
     opensearch_domain_endpoint = opensearch_domain_endpoint
     rag_user_name = opensearch_user_id
     rag_user_password = opensearch_user_password
@@ -54,12 +58,12 @@ def get_opensearch_client():
     return os_client
 
 # hybrid search retriever 만들기
-def get_retriever(streaming_callback, parent, reranker, hyde, ragfusion, alpha):
+def get_retriever(streaming_callback, parent, reranker, hyde, ragfusion, alpha, document_type):
     os_client = get_opensearch_client()
     llm_text = get_llm(streaming_callback)
     llm_emb = get_embedding_model()
     reranker_endpoint_name = pm.get_params(key="reranker_endpoint",enc=False)
-    index_name = "summit-workshop-index"
+    index_name = "default_doc_index" if document_type == "Default" else "customer_doc_index"
     # index_name = pm.get_params(key="opensearch-index-name-workshop-app", enc=True)
     opensearch_hybrid_retriever = OpenSearchHybridSearchRetriever(
         os_client=os_client,
@@ -101,10 +105,10 @@ def formatting_output(contexts):
             formatted_contexts.append((score, lines))
     return formatted_contexts
 
-def invoke(query, streaming_callback, parent, reranker, hyde, ragfusion, alpha):
+def invoke(query, streaming_callback, parent, reranker, hyde, ragfusion, alpha, document_type="Default"):
     # llm, retriever 가져오기
     llm_text = get_llm(streaming_callback)
-    opensearch_hybrid_retriever = get_retriever(streaming_callback, parent, reranker, hyde, ragfusion, alpha)
+    opensearch_hybrid_retriever = get_retriever(streaming_callback, parent, reranker, hyde, ragfusion, alpha, document_type)
     # context, tables, images = opensearch_hybrid_retriever._get_relevant_documents()
     # answer only 선택
     system_prompt = prompt_repo.get_system_prompt()

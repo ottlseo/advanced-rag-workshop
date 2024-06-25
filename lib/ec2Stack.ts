@@ -73,6 +73,7 @@ export class EC2Stack extends Stack {
       '[Install]',
       'WantedBy=multi-user.target',
       'EOF',
+      'sleep 20',
       'sudo systemctl daemon-reload',
       'sudo systemctl enable streamlit',
       'sudo systemctl start streamlit',
