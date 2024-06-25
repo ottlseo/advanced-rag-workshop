@@ -22,7 +22,7 @@ export class OpensearchStack extends Stack {
       stringValue: "raguser",
     });
 
-    const opensearch_user_password = "MarsEarth1!";
+    const opensearch_user_password = "pwkey";
 
     const secret = new secretsmanager.Secret(this, "domain-creds", {
       generateSecretString: {
