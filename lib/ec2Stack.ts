@@ -43,40 +43,40 @@ export class EC2Stack extends Stack {
     // set User Data
     const userData = ec2.UserData.forLinux();
     userData.addCommands(
-      'sudo apt-get update -y',
-      'sleep 15',
-      'sudo apt-get install ec2-instance-connect && sleep 15',
-      'sudo apt install -y git && sleep 15',
-      'sudo apt install -y python3-pip && sleep 20',
-      'sudo apt install -y python3.8-venv && sleep 20',
-      'cd /home/ubuntu && sudo git clone https://github.com/ottlseo/advanced-rag-workshop.git',
-      'sudo python3 -m venv --copies /home/ubuntu/my_env',
-      'sudo chown -R ubuntu:ubuntu /home/ubuntu/my_env',
-      'source /home/ubuntu/my_env/bin/activate',
-      'sleep 15',
-      'cd advanced-rag-workshop/application',
-      'pip3 install -r requirements.txt && sleep 180',
-      'pip3 install -U langchain-community && sleep 20',
-      'cat <<EOF > /etc/systemd/system/streamlit.service',
-      '[Unit]',
-      'Description=Streamlit App',
-      'After=network.target',
-      '',
-      '[Service]',
-      'User=ubuntu',
-      'Environment="AWS_DEFAULT_REGION=us-west-2"',
-      'WorkingDirectory=/home/ubuntu/advanced-rag-workshop/application',
-      'ExecStartPre=/bin/bash -c "sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8501"',
-      'ExecStart=/bin/bash -c "source /home/ubuntu/my_env/bin/activate && streamlit run streamlit.py --server.port 8501"',
-      'Restart=always',
-      '',
-      '[Install]',
-      'WantedBy=multi-user.target',
-      'EOF',
-      'sleep 20',
-      'sudo systemctl daemon-reload',
-      'sudo systemctl enable streamlit',
-      'sudo systemctl start streamlit',
+      `sudo apt-get update -y`,
+      `sleep 15`,
+      `sudo apt-get install ec2-instance-connect && sleep 15`,
+      `sudo apt install -y git && sleep 10`,
+      `sudo apt install -y python3-pip && sleep 20`,
+      `sudo apt install -y python3.8-venv && sleep 20`,
+      `cd /home/ubuntu && sudo git clone https://github.com/ottlseo/advanced-rag-workshop.git`,
+      `sudo python3 -m venv --copies /home/ubuntu/my_env`,
+      `sudo chown -R ubuntu:ubuntu /home/ubuntu/my_env`,
+      `source /home/ubuntu/my_env/bin/activate`,
+      `sleep 5`,
+      `cd advanced-rag-workshop/application`,
+      `pip3 install -r requirements.txt && sleep 420`, // Wait for 7 min
+      `sudo sh -c "cat <<EOF > /etc/systemd/system/streamlit.service
+      [Unit]
+      Description=Streamlit App
+      After=network.target
+
+      [Service]
+      User=ubuntu
+      Environment='AWS_DEFAULT_REGION=us-west-2'
+      WorkingDirectory=/home/ubuntu/advanced-rag-workshop/application
+      ExecStartPre=/bin/bash -c 'sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8501'
+      ExecStart=/bin/bash -c 'source /home/ubuntu/my_env/bin/activate && streamlit run streamlit.py --server.port 8501'
+      Restart=always
+      
+      [Install]
+      WantedBy=multi-user.target
+      EOF"`,
+      
+      `sleep 20`,
+      `sudo systemctl daemon-reload`,
+      `sudo systemctl enable streamlit`,
+      `sudo systemctl start streamlit`,
     );
     
     // EC2 instance

@@ -43,7 +43,7 @@ def get_opensearch_client():
     opensearch_user_id = pm.get_params(key='opensearch_user_id', enc=False)
     
     get_secret_value_response = secrets_manager.get_secret_value(SecretId="opensearch_user_password")
-    opensearch_user_password = get_secret_value_response['SecretString'] # decrypt # TODO: should check
+    opensearch_user_password = get_secret_value_response['pwkey']
     
     opensearch_domain_endpoint = opensearch_domain_endpoint
     rag_user_name = opensearch_user_id
@@ -62,7 +62,7 @@ def get_retriever(streaming_callback, parent, reranker, hyde, ragfusion, alpha, 
     os_client = get_opensearch_client()
     llm_text = get_llm(streaming_callback)
     llm_emb = get_embedding_model()
-    reranker_endpoint_name = pm.get_params(key="reranker_endpoint",enc=False)
+    reranker_endpoint_name = pm.get_params(key="reranker",enc=False)
     index_name = "default_doc_index" if document_type == "Default" else "customer_doc_index"
     # index_name = pm.get_params(key="opensearch-index-name-workshop-app", enc=True)
     opensearch_hybrid_retriever = OpenSearchHybridSearchRetriever(
