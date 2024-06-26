@@ -15,7 +15,7 @@
    "Type": "AWS::SecretsManager::Secret",
    "Properties": {
     "GenerateSecretString": {
-     "GenerateStringKey": "MarsEarth1!",
+     "GenerateStringKey": "pwkey",
      "SecretStringTemplate": "{\"es.net.http.auth.user\":\"raguser\"}"
     },
     "Name": "opensearch_user_password"

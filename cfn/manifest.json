@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-deploy-role-730335558061-us-west-2",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-cfn-exec-role-730335558061-us-west-2",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-730335558061-us-west-2/355d107374b587e796fa1482de58996ed7261350ffab3d4da16b820b9400d454.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-730335558061-us-west-2/707fc6e160fd3cdc6fe022904a7eb31a34547646cdb9989eb54163a4eaff66f1.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -138,7 +138,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-deploy-role-730335558061-us-west-2",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-cfn-exec-role-730335558061-us-west-2",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-730335558061-us-west-2/32740132a1c288e509f5ed587d02d3063a7be4ffbc2279c550bab230190f6520.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-730335558061-us-west-2/15c759e883504602dcd500064f37695d67ba15af2dd4a3e915a1b41516d5aa74.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -211,6 +211,78 @@
         ]
       },
       "displayName": "EC2Stack"
+    },
+    "SagemakerNotebookStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "SagemakerNotebookStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "SagemakerNotebookStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://730335558061/us-west-2",
+      "properties": {
+        "templateFile": "SagemakerNotebookStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-deploy-role-730335558061-us-west-2",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-cfn-exec-role-730335558061-us-west-2",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-730335558061-us-west-2/953d0921c958c9dc1d64b1969a536c811a6c50bb6b4eb2615b0adbcb1622e212.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "SagemakerNotebookStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-lookup-role-730335558061-us-west-2",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "SagemakerNotebookStack.assets"
+      ],
+      "metadata": {
+        "/SagemakerNotebookStack/SageMakerNotebookInstanceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SageMakerNotebookInstanceRoleD9206DA2"
+          }
+        ],
+        "/SagemakerNotebookStack/MyCfnNotebookInstanceLifecycleConfig": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyCfnNotebookInstanceLifecycleConfig"
+          }
+        ],
+        "/SagemakerNotebookStack/MyCfnNotebookInstance": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyCfnNotebookInstance"
+          }
+        ],
+        "/SagemakerNotebookStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/SagemakerNotebookStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/SagemakerNotebookStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "SagemakerNotebookStack"
     },
     "Tree": {
       "type": "cdk:tree",

@@ -1,0 +1,178 @@
+{
+ "Resources": {
+  "SageMakerNotebookInstanceRoleD9206DA2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "sagemaker.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonBedrockFullAccess"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonOpenSearchServiceFullAccess"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonSageMakerFullAccess"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonSSMFullAccess"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonS3FullAccess"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/SecretsManagerReadWrite"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SagemakerNotebookStack/SageMakerNotebookInstanceRole/Resource"
+   }
+  },
+  "MyCfnNotebookInstanceLifecycleConfig": {
+   "Type": "AWS::SageMaker::NotebookInstanceLifecycleConfig",
+   "Properties": {
+    "NotebookInstanceLifecycleConfigName": "notebookInstanceLifecycleConfig",
+    "OnCreate": [
+     {
+      "Content": {
+       "Fn::Base64": "#!/bin/bash\n\nset -e\n\n\nsudo -u ec2-user -i <<'EOF'\n \n#source /home/ec2-user/anaconda3/bin/deactivate\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U pip\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U awscli\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U botocore\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U boto3\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U sagemaker \n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U langchain\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U langchain-community\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U langchain_aws\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U termcolor\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U transformers\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U librosa\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U opensearch-py\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U sqlalchemy #==2.0.1\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U pypdf\n/home/ec2-user/anaconda3/envs/python3/bin/python -m #pip install -U spacy\n# /home/ec2-user/anaconda3/envs/python3/bin/python -m spacy download ko_core_news_md\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U ipython\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U ipywidgets\n#/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U llmsherpa\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U anthropic\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U faiss-cpu\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U jq\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U pydantic\n\nsudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm\nsudo yum -y update\nsudo yum install -y poppler-utils\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U lxml\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U kaleido\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U uvicorn\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U pandas\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U numexpr\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U pdf2image\n\n#sudo sh install_tesseract.sh\n#sudo sh SageMaker/aws-ai-ml-workshop-kr/genai/aws-gen-ai-kr/00_setup/install_tesseract.sh\nsudo amazon-linux-extras install libreoffice -y\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U \"unstructured[all-docs]\"\n#sudo rm -rf leptonica-1.84.1 leptonica-1.84.1.tar.gz tesseract-ocr\n\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U python-dotenv\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U llama-parse\n/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U pymupdf\n\nEOF\n#!/bin/bash\n\nset -e\n\n\nnohup bash <<'EOF' &\n\necho \"## Step 1\"\nyum -y update\nyum -y upgrade\nyum install clang -y\nyum install libpng-devel libtiff-devel zlib-devel libwebp-devel libjpeg-turbo-devel wget tar gzip -y\nwget https://github.com/DanBloomberg/leptonica/releases/download/1.84.1/leptonica-1.84.1.tar.gz\ntar -zxvf leptonica-1.84.1.tar.gz\ncd leptonica-1.84.1\n./configure\nmake\nmake install\n \necho \"## Step 2\"\ncd ~\nyum install git-core libtool pkgconfig -y\ngit clone --depth 1 https://github.com/tesseract-ocr/tesseract.git tesseract-ocr\ncd tesseract-ocr \nexport PKG_CONFIG_PATH=/usr/local/lib/pkgconfig\n./autogen.sh\n./configure \nmake\nmake install\n \necho \"## Step 3\"\ncd /usr/local/share/tessdata\nwget https://github.com/tesseract-ocr/tessdata/raw/main/osd.traineddata\nwget https://github.com/tesseract-ocr/tessdata/raw/main/eng.traineddata\nwget https://github.com/tesseract-ocr/tessdata/raw/main/hin.traineddata\nwget https://github.com/tesseract-ocr/tessdata/raw/main/kor.traineddata\nwget https://github.com/tesseract-ocr/tessdata/raw/main/kor_vert.traineddata\n#wget https://github.com/tesseract-ocr/tessdata_best/raw/main/kor.traineddata\n#wget https://github.com/tesseract-ocr/tessdata_best/raw/main/kor_vert.traineddata\n \necho \"## Step 4\"\necho \"export TESSDATA_PREFIX=/usr/local/share/tessdata\" >> ~/.bash_profile\necho \"export TESSDATA_PREFIX=/usr/local/share/tessdata\" >> /home/ec2-user/.bash_profile\n\nEOF"
+      }
+     }
+    ],
+    "OnStart": []
+   },
+   "Metadata": {
+    "aws:cdk:path": "SagemakerNotebookStack/MyCfnNotebookInstanceLifecycleConfig"
+   }
+  },
+  "MyCfnNotebookInstance": {
+   "Type": "AWS::SageMaker::NotebookInstance",
+   "Properties": {
+    "DefaultCodeRepository": "https://github.com/aws-samples/aws-ai-ml-workshop-kr.git",
+    "DirectInternetAccess": "Enabled",
+    "InstanceType": "ml.m5.xlarge",
+    "LifecycleConfigName": "notebookInstanceLifecycleConfig",
+    "NotebookInstanceName": "advanced-rag-workshop-notebook-instance",
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "SageMakerNotebookInstanceRoleD9206DA2",
+      "Arn"
+     ]
+    },
+    "VolumeSizeInGB": 10
+   },
+   "Metadata": {
+    "aws:cdk:path": "SagemakerNotebookStack/MyCfnNotebookInstance"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/22OTQrCMBCFz+I+GWvxBl0J4iIeQNJ0Wqb5GUhSRULubqQuXX2Px+Px9XA6d9Ad9CtJM1npaIRyz9pY0apHIe2hKHYohjl8WUXSC3ptMUJp3Y0zjsz2ElLWweCVZjRv43DgMNMi/kxqFQoTb9Hsr79cReAJYU3HZ9+UmtSaiGTcQiaPoHZ+ADfHZ7axAAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SagemakerNotebookStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
