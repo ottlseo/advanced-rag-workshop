@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 
-export class SageMakerNotebookInstanceStack extends cdk.Stack {
+export class SagemakerNotebookStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
