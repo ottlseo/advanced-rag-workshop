@@ -63,6 +63,15 @@ export class OpensearchStack extends Stack {
       })
     );
 
+    const domain_endpoint_pm = new ssm.StringParameter(
+      this,
+      "opensearch_domain_endpoint",
+      {
+        parameterName: "opensearch_domain_endpoint",
+        stringValue: domain.domainEndpoint,
+      }
+    );
+
     new cdk.CfnOutput(this, "OpensearchDomainEndpoint", {
       value: domain.domainEndpoint,
       description: "OpenSearch Domain Endpoint",
