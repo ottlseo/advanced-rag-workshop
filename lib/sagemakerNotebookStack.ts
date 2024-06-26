@@ -53,7 +53,7 @@ export class SageMakerNotebookInstanceStack extends cdk.Stack {
       // the properties below are optional
       //acceleratorTypes: ['acceleratorTypes'],
       //additionalCodeRepositories: ['additionalCodeRepositories'],
-      defaultCodeRepository: 'https://github.com/aws-samples/aws-ai-ml-workshop-kr.git',
+      defaultCodeRepository: 'https://github.com/Jiyu-Kim/advanced-rag-workshop.git',
       directInternetAccess: 'Enabled',
       //instanceMetadataServiceConfiguration: {
       //  minimumInstanceMetadataServiceVersion: 'minimumInstanceMetadataServiceVersion',
