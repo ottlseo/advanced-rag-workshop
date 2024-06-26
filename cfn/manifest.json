@@ -1,0 +1,222 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "OpensearchStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "OpensearchStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "OpensearchStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://730335558061/us-west-2",
+      "properties": {
+        "templateFile": "OpensearchStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-deploy-role-730335558061-us-west-2",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-cfn-exec-role-730335558061-us-west-2",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-730335558061-us-west-2/355d107374b587e796fa1482de58996ed7261350ffab3d4da16b820b9400d454.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "OpensearchStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-lookup-role-730335558061-us-west-2",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "OpensearchStack.assets"
+      ],
+      "metadata": {
+        "/OpensearchStack/opensearch_user_id/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "opensearchuseridDDCF6BBA"
+          }
+        ],
+        "/OpensearchStack/domain-creds/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "domaincredsC804ED5E"
+          }
+        ],
+        "/OpensearchStack/Domain": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": "rag-hol-mydomain"
+          }
+        ],
+        "/OpensearchStack/Domain/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Domain66AC69E0"
+          }
+        ],
+        "/OpensearchStack/Domain/AccessPolicy/Resource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DomainAccessPolicyEE735B04"
+          }
+        ],
+        "/OpensearchStack/Domain/AccessPolicy/CustomResourcePolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DomainAccessPolicyCustomResourcePolicyE61F1845"
+          }
+        ],
+        "/OpensearchStack/AWS679f53fac002430cb0da5b7982bd2287/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2"
+          }
+        ],
+        "/OpensearchStack/AWS679f53fac002430cb0da5b7982bd2287/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWS679f53fac002430cb0da5b7982bd22872D164C4C"
+          }
+        ],
+        "/OpensearchStack/OpensearchDomainEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OpensearchDomainEndpoint"
+          }
+        ],
+        "/OpensearchStack/parameter store user id": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "parameterstoreuserid"
+          }
+        ],
+        "/OpensearchStack/secrets manager user pw": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "secretsmanageruserpw"
+          }
+        ],
+        "/OpensearchStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/OpensearchStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/OpensearchStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "OpensearchStack"
+    },
+    "EC2Stack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "EC2Stack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "EC2Stack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://730335558061/us-west-2",
+      "properties": {
+        "templateFile": "EC2Stack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-deploy-role-730335558061-us-west-2",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-cfn-exec-role-730335558061-us-west-2",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-730335558061-us-west-2/32740132a1c288e509f5ed587d02d3063a7be4ffbc2279c550bab230190f6520.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "EC2Stack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::730335558061:role/cdk-hnb659fds-lookup-role-730335558061-us-west-2",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "OpensearchStack",
+        "EC2Stack.assets"
+      ],
+      "metadata": {
+        "/EC2Stack/InstanceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "InstanceRole3CCE2F1D"
+          }
+        ],
+        "/EC2Stack/chatbotAppSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "chatbotAppSecurityGroup29491422"
+          }
+        ],
+        "/EC2Stack/chatbotAppInstance/InstanceProfile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "chatbotAppInstanceInstanceProfile3F9E7EE6"
+          }
+        ],
+        "/EC2Stack/chatbotAppInstance/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "chatbotAppInstance407719B6"
+          }
+        ],
+        "/EC2Stack/SsmParameterValue:--aws--service--canonical--ubuntu--server--focal--stable--current--amd64--hvm--ebs-gp2--ami-id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SsmParameterValueawsservicecanonicalubuntuserverfocalstablecurrentamd64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
+          }
+        ],
+        "/EC2Stack/chatbotAppUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "chatbotAppUrl"
+          }
+        ],
+        "/EC2Stack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/EC2Stack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/EC2Stack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "EC2Stack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
