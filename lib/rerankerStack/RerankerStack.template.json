@@ -198,16 +198,6 @@
    "Metadata": {
     "aws:cdk:path": "RerankerStack/Dongjin-kr-ko-reranker-endpoint-Reranker"
    }
-  },
-  "CDKMetadata": {
-   "Type": "AWS::CDK::Metadata",
-   "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02PwWrDQAxEv8X3tWKHBNpbqWnpxVCcDwjKrrwotiWzu04Ixv9e7FDIaaRhxNPsoTwcocjwHnPrurznC8ynhLYzeI/nmXGAudGeTNXKpr/as32s63NaDNkADY0aOWl4fGIkE9HTgB0FmKtWanXUrxdf4kZlSZVKy/7VWRbTUNQp2I1U4ziybIlXu1JxnFhlMQWUUL6/ZR/WdT1e4s6TUMDEN8qRty5WJaYw2RThZ/KexX+jpRN6qtfX/tFG1BFc4+62L6A8QJFdI3MeJkk8EDRP/QOltM0mKQEAAA=="
-   },
-   "Metadata": {
-    "aws:cdk:path": "RerankerStack/CDKMetadata/Default"
-   },
-   "Condition": "CDKMetadataAvailable"
   }
  },
  "Mappings": {
@@ -501,40 +491,6 @@
        ]
       }
      ]
-    }
-   ]
-  }
- },
- "Parameters": {
-  "BootstrapVersion": {
-   "Type": "AWS::SSM::Parameter::Value<String>",
-   "Default": "/cdk-bootstrap/hnb659fds/version",
-   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
-  }
- },
- "Rules": {
-  "CheckBootstrapVersion": {
-   "Assertions": [
-    {
-     "Assert": {
-      "Fn::Not": [
-       {
-        "Fn::Contains": [
-         [
-          "1",
-          "2",
-          "3",
-          "4",
-          "5"
-         ],
-         {
-          "Ref": "BootstrapVersion"
-         }
-        ]
-       }
-      ]
-     },
-     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
     }
    ]
   }
