@@ -42,8 +42,10 @@ def get_opensearch_client():
     opensearch_domain_endpoint = pm.get_params(key='opensearch_domain_endpoint', enc=False)
     opensearch_user_id = pm.get_params(key='opensearch_user_id', enc=False)
     
-    get_secret_value_response = secrets_manager.get_secret_value(SecretId="opensearch_user_password")
-    opensearch_user_password = get_secret_value_response['pwkey']
+    response = secrets_manager.get_secret_value(SecretId='opensearch_user_password')
+    secrets_string = response.get('SecretString')
+    secrets_dict = eval(secrets_string)
+    opensearch_user_password = secrets_dict['pwkey']
     
     opensearch_domain_endpoint = opensearch_domain_endpoint
     rag_user_name = opensearch_user_id
