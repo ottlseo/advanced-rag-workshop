@@ -51,7 +51,9 @@ export class OpensearchStack extends Stack {
       encryptionAtRest: { enabled: true },
       fineGrainedAccessControl: {
         masterUserName: opensearch_user_id,
-        masterUserPassword: secret.secretValue,
+        masterUserPassword: secret.secretValueFromJson(
+          opensearch_user_password
+        ),
       },
     });
 
