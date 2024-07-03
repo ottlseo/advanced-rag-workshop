@@ -7,7 +7,7 @@ import { CustomResourceStack } from "../lib/customResourceStack";
 import { SagemakerNotebookStack } from "../lib/sagemakerNotebookStack/sagemakerNotebookStack";
 import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
-const DEFAULT_REGION = "us-west-2";
+const DEFAULT_REGION = "us-east-1";
 const envSetting = {
   env: {
     account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
@@ -35,6 +35,6 @@ const rerankerStack = new CfnInclude(opensearchStack, 'RerankerStack', {
 // Deploy EC2 stack
 const ec2Stack = new EC2Stack(app, "EC2Stack", envSetting);
 //ec2Stack.addDependency(opensearchStack);
-//ec2Stack.node.addDependency(rerankerStack);
+ec2Stack.node.addDependency(rerankerStack);
 
 app.synth();
