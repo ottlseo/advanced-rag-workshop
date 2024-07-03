@@ -69,7 +69,8 @@ def on_delete(event):
     print("delete resource %s" % physical_id)
     # Optionally add dissociation logic if required
     return { 'PhysicalResourceId': physical_id }
-
+    
+"""
 def is_complete(event, context):
     props = event["ResourceProperties"]
     domain_arn = props['DomainArn']
@@ -96,23 +97,18 @@ def is_complete(event, context):
 
     package_id = nori_pkg_id[DEFAULT_REGION][VERSION]
     print(f"Checking association status for package {package_id} on domain {domain_name}")
-
-    response = opensearch.describe_packages(
-        Filters=[
-            {
-                'Name': 'PackageID',
-                'Value': [package_id],
-            }
-        ]
+    
+    response = opensearch.list_packages_for_domain(
+        DomainName=domain_name,
+        MaxResults=1
     )
 
-    domain_associations = response.get('DomainPackageDetailsList', [])
-    is_ready = any(
-        association['DomainName'] == domain_name and 
-        association['DomainPackageStatus'] == 'ACTIVE'
-        for association in domain_associations
-    )
-
+    if response['DomainPackageDetailsList'][0]['DomainPackageStatus'] == "ACTIVE":
+        is_ready = True
+    else:
+        in_ready = False
+    
     print(f"Is package {package_id} active on domain {domain_name}? {is_ready}")
 
     return { 'IsComplete': is_ready }
+"""
