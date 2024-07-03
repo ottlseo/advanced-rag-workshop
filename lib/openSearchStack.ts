@@ -86,5 +86,11 @@ export class OpensearchStack extends Stack {
       value: secret.secretName,
       description: "secrets manager user pw",
     });
+    
+    new cdk.CfnOutput(this, 'DomainArn', {
+      value: domain.domainArn,
+      exportName: 'DomainArn'
+    });
+    
   }
 }
