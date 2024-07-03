@@ -24,7 +24,7 @@ const app = new App();
 //const opensearchStack = new OpensearchStack(app, "OpensearchStack", envSetting);
 //opensearchStack.addDependency(sagemakerNotebookStack);
 
-const customResourceStack = new CustomResourceStack(app, "CustomResourceStack4", envSetting)
+const customResourceStack = new CustomResourceStack(app, "CustomResourceStack5", envSetting)
 //customResourceStack.addDependency(opensearchStack)
 
 // Deploy Reranker stack using cloudformation template 
