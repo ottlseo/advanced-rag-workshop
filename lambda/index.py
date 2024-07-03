@@ -1,56 +1,118 @@
 import json
 import boto3
 import logging
-import os
-import cfnresponse
+import time
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 opensearch = boto3.client('opensearch')
 
-def lambda_handler(event, context):
+def on_event(event, context):
     print(event)
-    #domain_name = f"chatbot-{os.environ['AWS_STACK_NAME']}"
+    request_type = event['RequestType']
+    if request_type == 'Create': return on_create(event)
+    if request_type == 'Update': return on_update(event)
+    if request_type == 'Delete': return on_delete(event)
+    raise Exception("Invalid request type: %s" % request_type)
+
+def on_create(event):
+    props = event["ResourceProperties"]
+    print("create new resource with props %s" % props)
+
+    domain_arn = props['DomainArn']
+    domain_name = domain_arn.split('/')[-1]
+    DEFAULT_REGION = props['DEFAULT_REGION']
+    VERSION = props['VERSION']
+    
+    nori_pkg_id = {
+        'us-east-1': {
+            '2.3': 'G196105221',
+            '2.5': 'G240285063',
+            '2.7': 'G16029449', 
+            '2.9': 'G60209291',
+            '2.11': 'G181660338'
+        },
+        'us-west-2': {
+            '2.3': 'G94047474',
+            '2.5': 'G138227316',
+            '2.7': 'G182407158', 
+            '2.9': 'G226587000',
+            '2.11': 'G79602591'
+        }
+    }
+
+    package_id = nori_pkg_id[DEFAULT_REGION][VERSION]
+    print(domain_arn, domain_name, package_id)
+
+    try:
+        response = opensearch.associate_package(
+            PackageID=package_id,
+            DomainName=domain_name
+        )
+        print(f"Successfully initiated association of package {package_id} with domain {domain_name}")
+    except opensearch.exceptions.BaseException as e:
+        logger.error(f"Failed to associate package: {e}")
+        raise e
+
+    physical_id = f"AssociatePackage-{domain_name}-{package_id}"
+    return { 'PhysicalResourceId': physical_id }
+
+def on_update(event):
+    physical_id = event["PhysicalResourceId"]
+    props = event["ResourceProperties"]
+    print("update resource %s with props %s" % (physical_id, props))
+    return { 'PhysicalResourceId': physical_id }
+
+def on_delete(event):
+    physical_id = event["PhysicalResourceId"]
+    print("delete resource %s" % physical_id)
+    # Optionally add dissociation logic if required
+    return { 'PhysicalResourceId': physical_id }
+
+def is_complete(event, context):
     props = event["ResourceProperties"]
     domain_arn = props['DomainArn']
     domain_name = domain_arn.split('/')[-1]
     DEFAULT_REGION = props['DEFAULT_REGION']
     VERSION = props['VERSION']
     
-    nori_pkg_id = {}
-    nori_pkg_id['us-east-1'] = {
-        '2.3': 'G196105221',
-        '2.5': 'G240285063',
-        '2.7': 'G16029449', 
-        '2.9': 'G60209291',
-        '2.11': 'G181660338'
-    }
-    
-    nori_pkg_id['us-west-2'] = {
-        '2.3': 'G94047474',
-        '2.5': 'G138227316',
-        '2.7': 'G182407158', 
-        '2.9': 'G226587000',
-        '2.11': 'G79602591'
+    nori_pkg_id = {
+        'us-east-1': {
+            '2.3': 'G196105221',
+            '2.5': 'G240285063',
+            '2.7': 'G16029449', 
+            '2.9': 'G60209291',
+            '2.11': 'G181660338'
+        },
+        'us-west-2': {
+            '2.3': 'G94047474',
+            '2.5': 'G138227316',
+            '2.7': 'G182407158', 
+            '2.9': 'G226587000',
+            '2.11': 'G79602591'
+        }
     }
 
-    #package_id = "G79602591" #props['PackageID']
-    package_id = nori_pkg_id[DEFAULT_REGION][VERSION] 
-    print(domain_arn, domain_name, package_id)
-    
-    try:
-        if event['RequestType'] == 'Delete':
-            cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
-        elif event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
-            response = opensearch.associate_package(
-                PackageID=package_id,  # Nori plugin Package ID for us-west-2 and version 2.11
-                DomainName=domain_name
-            )
-            filtered_response = {
-                key: value for key, value in response.items() if key in ['Status', 'PackageID']
+    package_id = nori_pkg_id[DEFAULT_REGION][VERSION]
+    print(f"Checking association status for package {package_id} on domain {domain_name}")
+
+    response = opensearch.describe_packages(
+        Filters=[
+            {
+                'Name': 'PackageID',
+                'Value': [package_id],
             }
-            cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Data': filtered_response})
-    except Exception as e:
-        logger.error(f"Failed to associate package: {e}")
-        cfnresponse.send(event, context, cfnresponse.FAILED, {'Message': str(e)})
+        ]
+    )
+
+    domain_associations = response.get('DomainPackageDetailsList', [])
+    is_ready = any(
+        association['DomainName'] == domain_name and 
+        association['DomainPackageStatus'] == 'ACTIVE'
+        for association in domain_associations
+    )
+
+    print(f"Is package {package_id} active on domain {domain_name}? {is_ready}")
+
+    return { 'IsComplete': is_ready }

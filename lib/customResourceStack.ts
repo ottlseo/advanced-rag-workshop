@@ -28,19 +28,29 @@ export class CustomResourceStack extends cdk.Stack {
       resources: ["*"], //domainArn
     }));
 
+    
     const customResourceLambda = new lambda.Function(this, 'CustomResourceLambda', {
       runtime: lambda.Runtime.PYTHON_3_9,
       handler: 'index.on_event',
       code: lambda.Code.fromAsset('lambda'),
-      timeout: cdk.Duration.minutes(15),  // Increase timeout as necessary
+      timeout: cdk.Duration.minutes(15),
       role: lambdaRole
     });
 
+    const isCompleteLambda = new lambda.Function(this, 'IsCompleteLambda', {
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: 'index.is_complete',
+      code: lambda.Code.fromAsset('lambda'),
+      timeout: cdk.Duration.minutes(15),
+      role: lambdaRole
+    });
+
+    
     const customResourceProvider = new cr.Provider(this, 'CustomResourceProvider', {
       onEventHandler: customResourceLambda,
-      isCompleteHandler: customResourceLambda,
-      queryInterval: cdk.Duration.minutes(1),  // Interval between isComplete checks
-      totalTimeout: cdk.Duration.hours(1),     // Total time allowed for the operation
+      isCompleteHandler: isCompleteLambda,
+      queryInterval: cdk.Duration.minutes(1),
+      totalTimeout: cdk.Duration.hours(1),
     });
     
     

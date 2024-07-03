@@ -18,22 +18,22 @@ const envSetting = {
 const app = new App();
 
 // Deploy Sagemaker stack
-//const sagemakerNotebookStack = new SagemakerNotebookStack(app, "SagemakerNotebookStack", envSetting);
+const sagemakerNotebookStack = new SagemakerNotebookStack(app, "SagemakerNotebookStack", envSetting);
 
 // Deploy OpenSearch stack
-//const opensearchStack = new OpensearchStack(app, "OpensearchStack", envSetting);
-//opensearchStack.addDependency(sagemakerNotebookStack);
+const opensearchStack = new OpensearchStack(app, "OpensearchStack", envSetting);
+opensearchStack.addDependency(sagemakerNotebookStack);
 
-const customResourceStack = new CustomResourceStack(app, "CustomResourceStack5", envSetting)
-//customResourceStack.addDependency(opensearchStack)
+const customResourceStack = new CustomResourceStack(app, "CustomResourceStack", envSetting)
+customResourceStack.addDependency(opensearchStack)
 
 // Deploy Reranker stack using cloudformation template 
-//const rerankerStack = new CfnInclude(opensearchStack, 'RerankerStack', {
-//  templateFile: 'lib/rerankerStack/RerankerStack.template.json'
-//});
+const rerankerStack = new CfnInclude(opensearchStack, 'RerankerStack', {
+  templateFile: 'lib/rerankerStack/RerankerStack.template.json'
+});
 
 // Deploy EC2 stack
-//const ec2Stack = new EC2Stack(app, "EC2Stack", envSetting);
+const ec2Stack = new EC2Stack(app, "EC2Stack", envSetting);
 //ec2Stack.addDependency(opensearchStack);
 //ec2Stack.node.addDependency(rerankerStack);
 
