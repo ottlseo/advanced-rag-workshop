@@ -1,10 +1,10 @@
 #!/bin/bash
+set -x
 
-set -e
-
+yum-config-manager --disable centos-extras
 
 nohup bash <<'EOF' &
-
+ 
 echo "## Step 1"
 yum -y update
 yum -y upgrade
@@ -20,13 +20,17 @@ make install
 echo "## Step 2"
 cd ~
 yum install git-core libtool pkgconfig -y
-git clone --depth 1 https://github.com/tesseract-ocr/tesseract.git tesseract-ocr
-cd tesseract-ocr 
+wget https://github.com/tesseract-ocr/tesseract/archive/5.3.1.tar.gz
+tar xzvf 5.3.1.tar.gz
+cd tesseract-5.3.1
+#git clone --depth 1 https://github.com/tesseract-ocr/tesseract.git tesseract-ocr
+#cd tesseract-ocr 
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 ./autogen.sh
 ./configure 
 make
 make install
+ldconfig
  
 echo "## Step 3"
 cd /usr/local/share/tessdata

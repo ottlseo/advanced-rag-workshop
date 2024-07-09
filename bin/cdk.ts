@@ -7,7 +7,7 @@ import { CustomResourceStack } from "../lib/customResourceStack";
 import { SagemakerNotebookStack } from "../lib/sagemakerNotebookStack/sagemakerNotebookStack";
 import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
-const DEFAULT_REGION = "us-east-1";
+const DEFAULT_REGION = "us-west-2";
 const envSetting = {
   env: {
     account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
