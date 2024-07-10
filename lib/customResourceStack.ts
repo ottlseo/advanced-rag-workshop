@@ -4,12 +4,20 @@ import * as cr from 'aws-cdk-lib/custom-resources';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
+interface CustomResourceStackProps extends cdk.StackProps {
+  env: {
+    account: string | undefined;
+    region: string;
+  };
+}
+
 export class CustomResourceStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: CustomResourceStackProps) {
     super(scope, id, props);
 
     const domainArn = cdk.Fn.importValue('DomainArn');
-    const DEFAULT_REGION = this.node.tryGetContext('DEFAULT_REGION');
+    //const DEFAULT_REGION = this.node.tryGetContext('DEFAULT_REGION');
+    const DEFAULT_REGION = props.env.region;
     
     const lambdaRole = new iam.Role(this, 'LambdaRole', {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),

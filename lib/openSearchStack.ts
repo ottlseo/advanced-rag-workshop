@@ -13,7 +13,7 @@ export class OpensearchStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const domainName = `rag-hol-mydomain`;
+    const domainName = `rag-hol-mydomain-0710`;
 
     const opensearch_user_id = "raguser";
 
@@ -51,7 +51,8 @@ export class OpensearchStack extends Stack {
       encryptionAtRest: { enabled: true },
       fineGrainedAccessControl: {
         masterUserName: opensearch_user_id,
-        masterUserPassword: secret.secretValue,
+        masterUserPassword: secret.secretValueFromJson(
+          opensearch_user_password),
       },
     });
 
