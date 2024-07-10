@@ -3,6 +3,7 @@ import "source-map-support/register";
 import { App } from "aws-cdk-lib";
 import { EC2Stack } from "../lib/ec2Stack/ec2Stack";
 import { OpensearchStack } from "../lib/openSearchStack";
+import { CustomResourceStack } from "../lib/customResourceStack";
 import { SagemakerNotebookStack } from "../lib/sagemakerNotebookStack/sagemakerNotebookStack";
 import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
@@ -23,6 +24,9 @@ const sagemakerNotebookStack = new SagemakerNotebookStack(app, "SagemakerNoteboo
 const opensearchStack = new OpensearchStack(app, "OpensearchStack", envSetting);
 opensearchStack.addDependency(sagemakerNotebookStack);
 
+const customResourceStack = new CustomResourceStack(app, "CustomResourceStack", envSetting)
+customResourceStack.addDependency(opensearchStack)
+
 // Deploy Reranker stack using cloudformation template 
 const rerankerStack = new CfnInclude(opensearchStack, 'RerankerStack', {
   templateFile: 'lib/rerankerStack/RerankerStack.template.json'
@@ -30,7 +34,7 @@ const rerankerStack = new CfnInclude(opensearchStack, 'RerankerStack', {
 
 // Deploy EC2 stack
 const ec2Stack = new EC2Stack(app, "EC2Stack", envSetting);
-ec2Stack.addDependency(opensearchStack);
+//ec2Stack.addDependency(opensearchStack);
 ec2Stack.node.addDependency(rerankerStack);
 
 app.synth();

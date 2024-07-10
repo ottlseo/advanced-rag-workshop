@@ -13,7 +13,7 @@ export class OpensearchStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const domainName = `rag-hol-mydomain`;
+    const domainName = `rag-hol-mydomain-0710`;
 
     const opensearch_user_id = "raguser";
 
@@ -88,5 +88,11 @@ export class OpensearchStack extends Stack {
       value: secret.secretName,
       description: "secrets manager user pw",
     });
+    
+    new cdk.CfnOutput(this, 'DomainArn', {
+      value: domain.domainArn,
+      exportName: 'DomainArn'
+    });
+    
   }
 }
