@@ -52,7 +52,8 @@ export class OpensearchStack extends Stack {
       fineGrainedAccessControl: {
         masterUserName: opensearch_user_id,
         masterUserPassword: secret.secretValueFromJson(
-          opensearch_user_password),
+          opensearch_user_password
+        ),
       },
     });
 
