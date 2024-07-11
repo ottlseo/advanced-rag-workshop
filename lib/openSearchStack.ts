@@ -30,6 +30,7 @@ export class OpensearchStack extends Stack {
           "es.net.http.auth.user": opensearch_user_id,
         }),
         generateStringKey: opensearch_user_password,
+        excludeCharacters: '"\'',
       },
       secretName: "opensearch_user_password",
     });
