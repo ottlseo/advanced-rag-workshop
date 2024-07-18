@@ -29,7 +29,7 @@ def parse_metadata(metadata):
 def show_document_info_label():
     with st.container(border=True):
         if st.session_state.document_type == "Default":
-            st.markdown('''📝 현재 기본 문서인 [**상록초등학교 교육 과정 문서**](https://file.notion.so/f/f/d82c0c1c-c239-4242-bd5e-320565fdc9d4/6057662b-2d01-4284-a65f-cc17d050a321/school_edu_guide.pdf?id=a2f7166b-f663-4740-aa06-ec559567011a&table=block&spaceId=d82c0c1c-c239-4242-bd5e-320565fdc9d4&expirationTimestamp=1718100000000&signature=wxS5AgYuK085mNvynkUZsRyqyMuqE_ucoCNfM4jRnU0&downloadName=school_edu_guide.pdf)를 활용하고 있습니다.''')
+            st.markdown('''📝 현재 기본 문서인 [**상록초등학교 교육 과정 문서**](https://d14ojpq4k4igb1.cloudfront.net/school_edu_guide.pdf)를 활용하고 있습니다.''')
             st.markdown('''다른 문서로 챗봇 서비스를 이용해보고 싶다면 왼쪽 사이드바의 Document type에서 *'Custom'* 옵션을 클릭하고, 진행자의 안내에 따라 문서를 새로 인덱싱하여 사용해보세요.''')
         else:
             st.markdown('''**💁‍♀️ 새로운 문서로 챗봇 서비스를 이용하고 싶으신가요?**''') 
@@ -57,7 +57,6 @@ def show_context_with_tab(contexts):
                     for line in context["lines"]:
                         st.write(line)
                     parse_metadata(context["meta"])
-                    ### TODO: parent_docs 선택 시 발생하는 오류 fix
                     
 # 'All at once' 옵션 선택 시 4개의 컬럼으로 나누어 결과 표시하는 UI
 # TODO: HyDE, RagFusion 추가 논의 필요
@@ -158,9 +157,6 @@ with st.sidebar: # Sidebar 모델 옵션
             ) 
         hyde = hyde_or_ragfusion == "HyDE"
         ragfusion = hyde_or_ragfusion == "RAG-Fusion"
-
-# if st.session_state.document_type == "Custom": 
-    # TODO: OpenSearch endpoint name 변경
 
 ###### 'Separately' 옵션 선택한 경우 ######
 if st.session_state.showing_option == "Separately":
