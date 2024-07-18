@@ -6,7 +6,7 @@ AWS Q&amp;A Bot with Advanced RAG Workshop Assets
 isengardcli assume
 git clone https://github.com/ottlseo/advanced-rag-workshop.git
 cd advanced-rag-workshop
-npm i --save-dev @types/noded
+npm i --save-dev @types/node
 cdk bootstrap
 cdk synth
 cdk deploy --all --require-approval never
