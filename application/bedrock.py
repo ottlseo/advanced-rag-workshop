@@ -33,8 +33,9 @@ def get_llm(streaming_callback):
     return llm
 
 # 임베딩 모델 가져오기
-def get_embedding_model():
-    llm_emb = BedrockEmbeddings(model_id='amazon.titan-embed-text-v1')
+def get_embedding_model(document_type):
+    model_id= 'amazon.titan-embed-text-v1' if document_type == 'Default' else 'amazon.titan-embed-text-v2:0'
+    llm_emb = BedrockEmbeddings(model_id=model_id)
     return llm_emb
 
 # Opensearch vectorDB 가져오기
@@ -63,10 +64,9 @@ def get_opensearch_client():
 def get_retriever(streaming_callback, parent, reranker, hyde, ragfusion, alpha, document_type):
     os_client = get_opensearch_client()
     llm_text = get_llm(streaming_callback)
-    llm_emb = get_embedding_model()
+    llm_emb = get_embedding_model(document_type)
     reranker_endpoint_name = "reranker"
     index_name = "default_doc_index" if document_type == "Default" else "customer_doc_index"
-    # index_name = pm.get_params(key="opensearch-index-name-workshop-app", enc=True)
     opensearch_hybrid_retriever = OpenSearchHybridSearchRetriever(
         os_client=os_client,
         index_name=index_name,
