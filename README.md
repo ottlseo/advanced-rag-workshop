@@ -4,9 +4,12 @@ AWS Q&amp;A Bot with Advanced RAG Workshop Assets
 ### How to deploy CDK stacks
 ```bash
 isengardcli assume
+git clone https://github.com/ottlseo/advanced-rag-workshop.git
+cd advanced-rag-workshop
+npm i --save-dev @types/noded
 cdk bootstrap
-cdk deploy --all
-y
+cdk synth
+cdk deploy --all --require-approval never
 ```
 
 ## Welcome to your CDK TypeScript project
