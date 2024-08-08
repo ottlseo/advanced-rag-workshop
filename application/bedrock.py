@@ -41,11 +41,11 @@ def get_embedding_model(document_type):
 # Opensearch vectorDB 가져오기
 def get_opensearch_client():
     opensearch_domain_endpoint = pm.get_params(key='opensearch_domain_endpoint', enc=False)
-    opensearch_user_id = pm.get_params(key='opensearch_user_id', enc=False)
     
     response = secrets_manager.get_secret_value(SecretId='opensearch_user_password')
     secrets_string = response.get('SecretString')
     secrets_dict = eval(secrets_string)
+    opensearch_user_id = secrets_dict['es.net.http.auth.user']
     opensearch_user_password = secrets_dict['pwkey']
     
     opensearch_domain_endpoint = opensearch_domain_endpoint
