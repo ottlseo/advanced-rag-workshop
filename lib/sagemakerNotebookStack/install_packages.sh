@@ -6,7 +6,7 @@ set -e
 sudo -u ec2-user -i <<'EOF'
  
 #source /home/ec2-user/anaconda3/bin/deactivate
-/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U pip==24.1.1
+/home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U pip
 /home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U awscli==1.33.16
 /home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U botocore==1.34.134
 /home/ec2-user/anaconda3/envs/python3/bin/python -m pip install -U boto3==1.34.134
